@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit Task</title>
+</head>
+<h1>Edit Task</h1>
+
+<body>
+    <form id="editForm">
+        <fieldset>
+            <legend>Edit Task</legend>
+            <label>Title: <input type="text" id="title" name="title" size="30"></label><br>
+            <label>Description: <input type="text-area" id="description" name="description" size="30"></label><br>
+            <label>Done:</label><br>
+            <input type="radio" id="done" name="done" value="true"> true<br>
+            <input type="radio" id="done" name="done" value="false" checked> false<br>
+            <label>Date:</label><br>
+            <input type="date" id="datetime" name="datetime">
+            <br>
+            <button id='edit-btn' onclick='putFunction(event)'>Edit</button>
+        </fieldset>
+    </form>
+    <br>
+    <button onclick="window.location.href='/toDoApp.html'">Back</button>
+
+    <script>
+
+        var url = new URLSearchParams(window.location.search);
+        var id = url.get('id');
+
+        loadTask(id);
+
+        //console.log(URLSearchParams);
+        // console.log(id);
+
+
+
+
+
+        //document.getElementById('editForm').addEventListener('submit', putFunction(event))
+
+        function putFunction(event) {
+            event.preventDefault();
+            var url = new URLSearchParams(window.location.search);
+            var id = url.get('id');
+            // console.log('ID:' + id);
+            //var url = new URLSearchParams(window.location.search);
+            //var id = url.get('id');
+
+
+            console.log('edw:' + params);
+            var xhr = new XMLHttpRequest();
+            xhr.open('PUT', " http://localhost:8084/api.todo/" + id);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    console.log(xhr.status);
+                    console.log(xhr.responseText);
+                }
+            };
+
+            var title = document.getElementById('title').value;
+            var description = document.getElementById('description').value;
+            var done = document.getElementById('done').value;
+            var datetime = document.getElementById('datetime').value;
+            var params = '{' +
+                '"id" : ' + '"' + id + '",' +
+                '"title" : ' + '"' + title + '",' +
+                '"description" : ' + '"' + description + '",' +
+                '"done" : ' + '"' + done + '",' +
+                '"datetime" : ' + '"' + datetime + '" }'
+                ;
+
+            xhr.send(params);
+        }
+
+
+        function loadTask(id) {
+            //Create XHR Object
+            var xhr = new XMLHttpRequest();
+            // OPEN - type, url/file, async
+            // console.log(xhr);
+            xhr.open('GET', 'http://localhost:8084/api.todo/' + id, true);
+
+            xhr.onprogress = function () {
+
+            }
+
+
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    // console.log(this.responseText);
+
+                    var task = JSON.parse(this.responseText);
+                    var title = task.title;
+                    var description = task.description;
+                    var done = task.done;
+                    var datetime = task.datetime;
+                    document.getElementById('title').value = title;
+                    document.getElementById('description').value = description;
+                    document.getElementById('done').value = done;
+                    document.getElementById('datetime').value = datetime.split("T", 1);
+                }
+            }
+
+            xhr.onerror = function () {
+                console.log('Request Error...');
+            }
+            xhr.send();
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="postForm">
+        <fieldset>
+            <legend>New Task</legend>
+            <label>Title: <input type="text" id="title" name="title" size="30"></label><br>
+            <label>Description: <input type="text-area" id="description" name="description" size="30"></label><br>
+            <label>Done:</label><br>
+            <input type="radio" id="done" name="done" value="true"> true<br>
+            <input type="radio" id="done" name="done" value="false" checked> false<br>
+            <label>Date:</label><br>
+            <input type="date" id="datetime" name="datetime">
+            <br>
+            <input type="submit" value="Submit">
+        </fieldset>
+    </form>
+    <br>
+    <button onclick="window.location.href='/toDoApp.html'">Back</button>
+
+
+    <script>
+        document.getElementById('postForm').addEventListener('submit', postFunction)
+
+        function postFunction(e) {
+            // e.preventDefaut();
+
+            var title = document.getElementById('title').value;
+            var description = document.getElementById('description').value;
+            var done = document.getElementById('done').value;
+            var datetime = document.getElementById('datetime').value;
+            var params = '{' +
+                '"title" : ' + '"' + title + '",' +
+                '"description" : ' + '"' + description + '",' +
+                '"done" : ' + '"' + done + '",' +
+                '"datetime" : ' + '"' + datetime + '" }'
+                ;
+            console.log(params);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', " http://localhost:8084/api.todo/", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(params);
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp</title>
+</head>
+
+<body>
+    <h1>To Do App</h1>
+
+
+    <h1>list of Tasks</h1>
+    <br><br>
+    <div id="new-task">
+        <button onclick="window.location.href='/new-task.html'">new Task</button>
+    </div>
+    <br><br>
+    <div id="tasks"> </div>
+
+
+
+
+    <script>
+        loadTasks();
+        function loadTasks() {
+            //Create XHR Object
+            var xhr = new XMLHttpRequest();
+            // OPEN - type, url/file, async
+            // console.log(xhr);
+            xhr.open('GET', 'http://localhost:8084/api.todo/', true);
+
+            xhr.onprogress = function () {
+
+            }
+
+
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    // console.log(this.responseText);
+
+                    var tasks = JSON.parse(this.responseText);
+
+                    var output = '';
+                    for (var i in tasks) {
+                        output +=
+                            '<div class="task">' +
+                            '<ul>' +
+                            '<li>' + tasks[i].title + '</li>' +
+                            '<li>' + tasks[i].description + '</li>' +
+                            '<li>' + tasks[i].done + '</li>' +
+                            '<li>' + tasks[i].datetime + '</li>' +
+                            '<li>' + '<span id=\'edit-btn\'>' + '<button onclick=edit(' + tasks[i].id + ')>' + 'edit' + '</button>' + '</span>' + '<span id=\'delete-btn\' > ' + '<button onclick=deleteTask(' + tasks[i].id + ');>' + 'delete ' + '</button > ' + '</span > ' + '</li > ' +
+                            '</ul>' +
+                            '</div>';
+                    }
+                    document.getElementById('tasks').innerHTML = output;
+                }
+            }
+
+            xhr.onerror = function () {
+                console.log('Request Error...');
+            }
+            xhr.send();
+        }
+        function deleteTask(id) {
+            //Create XHR Object
+            var xhr = new XMLHttpRequest();
+            // OPEN - type, url/file, async
+            // console.log(xhr);
+            xhr.open('DELETE', 'http://localhost:8084/api.todo/' + id, true);
+
+            xhr.onprogress = function () {
+
+            }
+
+
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    // console.log(this.responseText);
+
+                    // var tasks = JSON.parse(this.responseText);
+
+                    // var output = '';
+                    // for (var i in tasks) {
+                    //     output +=
+                    //         '<div class="task">' +
+                    //         '<ul>' +
+                    //         '<li>' + tasks[i].title + '</li>' +
+                    //         '<li>' + tasks[i].description + '</li>' +
+                    //         '<li>' + tasks[i].done + '</li>' +
+                    //         '<li>' + tasks[i].datetime + '</li>' +
+                    //         '<li>' + '<span id=\'edit-btn\'>' + '<button>' + 'edit' + '</button>' + '</span>' + '<span id=\'delete-btn\' > ' + '<button onclick=deleteTask(' + tasks[i].id + ');>' + 'delete ' + '</button > ' + '</span > ' + '</li > ' +
+                    //         '</ul>' +
+                    //         '</div>';
+                    // }
+                    //document.getElementById('tasks').innerHTML = output;
+                }
+            }
+
+            xhr.onerror = function () {
+                console.log('Request Error...');
+            }
+            xhr.send();
+        }
+
+        function edit(id) {
+            //var dist = document.getElementById('value').value; // change here
+            // if (dist != "") {
+            window.location.href = "edit-task.html?id=" + id;
+            //  } else
+            //  alert('Oops.!!');
+        }
+
+    </script>
+</body>
+
+</html>
